@@ -51,15 +51,5 @@ struct AppView: View {
                     .id(foliageType)
             }
         }
-        
-        Picker("Area",
-               selection: $viewModel.area) {
-            
-            ForEach(Grid.Footprint.Area.allCases, id: \.self) { area in
-                
-                Text(area.id.capitalized)
-                    .id(area)
-            }
-        }
     }
 }

@@ -8,6 +8,7 @@ import Bivouac
 import Euclid
 import Foundation
 import SceneKit
+import Verdure
 
 class AppViewModel: ObservableObject {
     
@@ -17,7 +18,7 @@ class AppViewModel: ObservableObject {
         static let cameraZ = 1.5
     }
     
-    @Published var foliageType: FoliageType = .bamboo {
+    @Published var foliageType: FoliageType = .cherryBlossom {
         
         didSet {
             
@@ -26,21 +27,10 @@ class AppViewModel: ObservableObject {
             updateScene()
         }
     }
-
-    @Published var area: Grid.Footprint.Area = .rhombus {
-        
-        didSet {
-            
-            guard oldValue != area else { return }
-            
-            updateScene()
-        }
-    }
     
     let scene = Scene()
     
-    private var footprint: Grid.Footprint { .init(origin: .zero,
-                                                  area: area) }
+    private let operationQueue = OperationQueue()
     
     init() {
         
@@ -70,34 +60,36 @@ extension AppViewModel {
     
     private func updateScene() {
         
-        scene.clear()
+        let operation = FoliageMeshOperation(foliageType: foliageType)
         
-        updateSurface()
-        
-        let size = 0.2
-        
-        let box = SCNBox(width: size,
-                         height: size,
-                         length: size,
-                         chamferRadius: 0)
-        
-        guard let node = createNode(with: Mesh(box)) else { return }
-        
-        let position = footprint.center
-        
-        scene.camera.position = SCNVector3(position)
-        
-        node.position = SCNVector3(position.x, position.y + (size / 2.0), position.z)
-        node.geometry?.firstMaterial?.diffuse.contents = NSColor.systemPink
-        
-        scene.rootNode.addChildNode(node)
+        operation.enqueue(on: operationQueue) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+                
+            case .success(let mesh):
+                
+                self.scene.clear()
+                
+                self.updateSurface()
+                
+                guard let node = self.createNode(with: mesh) else { return }
+                
+                self.scene.rootNode.addChildNode(node)
+                
+            case .failure(let error):
+                
+                fatalError(error.localizedDescription)
+            }
+        }
     }
     
     private func updateSurface() {
         
         var polygons: [Euclid.Polygon] = []
         
-        for coordinate in footprint.coordinates {
+        for coordinate in foliageType.area.footprint {
             
             let triangle = Grid.Triangle(coordinate)
             
