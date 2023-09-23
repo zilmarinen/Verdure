@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "euclid",
+      "identity" : "peakoperation",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:nicklockwood/Euclid.git",
+      "location" : "git@github.com:3Squared/PeakOperation.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "00a39468d274a3081966ed115ef5f18cd28b43ff"
+        "branch" : "develop",
+        "revision" : "35811e5f3dc539a185601c6b3d54e0a9f9481cb1"
       }
     }
   ],
