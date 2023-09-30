@@ -12,12 +12,6 @@ import Verdure
 
 class AppViewModel: ObservableObject {
     
-    enum Constant {
-        
-        static let cameraY = 1.5
-        static let cameraZ = 1.5
-    }
-    
     @Published var foliageType: FoliageType = .cherryBlossom {
         
         didSet {
