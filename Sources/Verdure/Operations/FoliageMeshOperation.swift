@@ -26,9 +26,12 @@ public class FoliageMeshOperation: ConcurrentOperation,
         do {
             
             let origin = foliageType.area.center(at: .tile)
+            let trunkOrigin = foliageType.trunk.area.center(at: .tile)
+            let canopyOrigin = foliageType.area.center(at: .tile)
+            let canopyElevation = Vector(0.0, foliageType.trunk.height.value, 0.0)
             
-            let trunk = try foliageType.render(trunk: origin - foliageType.trunk.center(at: .tile))
-            let canopy = try foliageType.render(canopy: (origin - foliageType.area.center(at: .tile)) + Vector(0.0, foliageType.trunkHeight.value, 0.0))
+            let trunk = try foliageType.render(trunk: origin - trunkOrigin)
+            let canopy = try foliageType.render(canopy: (origin - canopyOrigin) + canopyElevation)
 
             output = .success(trunk.union(canopy))
         }

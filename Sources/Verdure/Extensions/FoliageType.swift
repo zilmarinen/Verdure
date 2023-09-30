@@ -10,7 +10,66 @@ import Foundation
 
 extension FoliageType {
     
-    internal enum Canopy {
+    internal var canopy: Canopy {
+        
+        switch self {
+            
+        case .cherryBlossom: return .cherryBlossom
+        case .chicle: return .chicle
+        case .goldenGingko: return .goldenGingko
+        case .jacaranda: return .jacaranda
+        case .linden: return .linden
+        case .spruce: return .spruce
+        case .thujaOccidentalis: return .thujaOccidentalis
+        }
+    }
+    
+    internal var trunk: Trunk {
+        
+        switch self {
+            
+        case .cherryBlossom: return .cherryBlossom
+        case .chicle: return .chicle
+        case .goldenGingko: return .goldenGingko
+        case .jacaranda: return .jacaranda
+        case .linden: return .linden
+        case .spruce: return .spruce
+        case .thujaOccidentalis: return .thujaOccidentalis
+        }
+    }
+}
+
+extension FoliageType {
+    
+    internal struct Canopy {
+        
+        internal static let cherryBlossom = Canopy(height: .tall,
+                                                   profile: .staggered,
+                                                   radius: .thin)
+        
+        internal static let chicle = Canopy(height: .tall,
+                                            profile: .stepped,
+                                            radius: .thin)
+        
+        internal static let goldenGingko = Canopy(height: .epic,
+                                                  profile: .stepped,
+                                                  radius: .chonki)
+        
+        internal static let jacaranda = Canopy(height: .tall,
+                                               profile: .stepped,
+                                               radius: .thin)
+        
+        internal static let linden = Canopy(height: .tall,
+                                            profile: .equal,
+                                            radius: .thick)
+        
+        internal static let spruce = Canopy(height: .epic,
+                                            profile: .staggered,
+                                            radius: .thin)
+        
+        internal static let thujaOccidentalis = Canopy(height: .tall,
+                                                       profile: .stepped,
+                                                       radius: .chonki)
         
         internal enum Profile {
             
@@ -20,6 +79,7 @@ extension FoliageType {
             
             case equal
             case staggered
+            case stepped
             
             internal var value: CanopyProfile {
                 
@@ -32,6 +92,10 @@ extension FoliageType {
                 case .staggered: return (crown: 0.8,
                                          throne: 0.3,
                                          mantle: 0.1)
+                    
+                case .stepped: return (crown: 0.6,
+                                       throne: 0.35,
+                                       mantle: 0.1)
                 }
             }
         }
@@ -43,7 +107,8 @@ extension FoliageType {
                                       throne: Double,
                                       mantle: Double,
                                       base: Double)
-         
+            
+            case chonki
             case thin
             case thick
             
@@ -51,11 +116,17 @@ extension FoliageType {
                 
                 switch self {
                     
-                case .thin: return (apex: 0.2,
+                case .chonki: return (apex: 0.35,
+                                      crown: 0.1,
+                                      throne: 0.0,
+                                      mantle: 0.1,
+                                      base: 0.3)
+                    
+                case .thin: return (apex: 0.21,
                                     crown: 0.1,
                                     throne: 0.0,
                                     mantle: 0.1,
-                                    base: 0.2)
+                                    base: 0.21)
                     
                 case .thick: return (apex: 0.2,
                                      crown: 0.1,
@@ -70,67 +141,106 @@ extension FoliageType {
             
             case epic
             case tall
+            
+            internal var value: Double {
+                
+                switch self {
+                    
+                case .epic: return .sqrt3 * .sqrt3
+                case .tall: return .sqrt3
+                }
+            }
+        }
+        
+        internal let height: Height
+        internal let profile: Profile
+        internal let radius: Radius
+    }
+}
+
+extension FoliageType {
+    
+    internal struct Trunk {
+        
+        internal static let cherryBlossom = Trunk(area: .escher,
+                                                  height: .tall,
+                                                  radius: .thin)
+        
+        internal static let chicle = Trunk(area: .floret,
+                                           height: .short,
+                                           radius: .thick)
+        
+        internal static let goldenGingko = Trunk(area: .pinwheel,
+                                                 height: .short,
+                                                 radius: .thick)
+        
+        internal static let jacaranda = Trunk(area: .floret,
+                                              height: .short,
+                                              radius: .thick)
+        
+        internal static let linden = Trunk(area: .floret,
+                                           height: .tall,
+                                           radius: .thick)
+        
+        internal static let spruce = Trunk(area: .escher,
+                                           height: .short,
+                                           radius: .thin)
+        
+        internal static let thujaOccidentalis = Trunk(area: .truchet,
+                                                      height: .short,
+                                                      radius: .thick)
+        
+        internal enum Radius {
+            
+            typealias TrunkRadius = (apex: Double,
+                                     base: Double)
+            
+            case thin
+            case thick
+            
+            internal var value: TrunkRadius {
+                
+                switch self {
+                    
+                case .thin: return (apex: 0.25,
+                                    base: 0.15)
+                    
+                case .thick: return (apex: 0.25,
+                                     base: 0.1)
+                }
+            }
+        }
+        
+        internal enum Height {
+            
+            case epic
+            case tall
             case short
             
             internal var value: Double {
                 
                 switch self {
-                
-                case .epic: return 3.0
-                case .tall: return 2.0
-                case .short: return 1.0
+                    
+                case .epic: return .sqrt3
+                case .tall: return .sqrt3 / 2.0
+                case .short: return .sqrt3 / 4.0
                 }
             }
         }
-    }
-    
-    internal var canopyProfile: Canopy.Profile {
         
-        switch self {
-            
-        case .cherryBlossom: return .staggered
-        case .chicle: return .equal
-        case .goldenGingko: return .equal
-        case .jacaranda: return .staggered
-        case .linden: return .staggered
-        case .spruce: return .staggered
-        case .thujaOccidentalis: return .staggered
-        }
+        internal let area: Grid.Footprint.Area
+        internal let height: Height
+        internal let radius: Radius
     }
-    
-    internal var canopyRadius: Canopy.Radius {
-        
-        switch self {
-            
-        case .cherryBlossom: return .thin
-        case .chicle: return .thick
-        case .goldenGingko: return .thick
-        case .jacaranda: return .thin
-        case .linden: return .thick
-        case .spruce: return .thin
-        case .thujaOccidentalis: return .thick
-        }
-    }
-    
-    internal var canopyHeight: Canopy.Height {
-        
-        switch self {
-            
-        case .cherryBlossom: return .tall
-        case .chicle: return .short
-        case .goldenGingko: return .tall
-        case .jacaranda: return .short
-        case .linden: return .short
-        case .spruce: return .epic
-        case .thujaOccidentalis: return .tall
-        }
-    }
+}
+
+extension FoliageType {
     
     internal func render(canopy position: Vector) throws -> Mesh {
         
-        let height = canopyHeight.value
-        let profile = canopyProfile.value
-        let radius = canopyRadius.value
+        let height = canopy.height.value
+        let profile = canopy.profile.value
+        let radius = canopy.radius.value
         
         guard let stencil = Polygon(area.vertices(scale: .tile,
                                                   normal: .up,
@@ -189,99 +299,13 @@ extension FoliageType {
         
         return Mesh(polygons)
     }
-}
-
-extension FoliageType {
-    
-    internal enum Trunk {
-        
-        internal enum Radius {
-            
-            typealias TrunkRadius = (apex: Double,
-                                     base: Double)
-         
-            case thin
-            case thick
-            
-            internal var value: TrunkRadius {
-                
-                switch self {
-                    
-                case .thin: return (apex: 0.25,
-                                    base: 0.15)
-                    
-                case .thick: return (apex: 0.25,
-                                     base: 0.1)
-                }
-            }
-        }
-        
-        internal enum Height {
-            
-            case epic
-            case tall
-            case short
-            
-            internal var value: Double {
-                
-                switch self {
-                
-                case .epic: return 1.5
-                case .tall: return 1.0
-                case .short: return 0.5
-                }
-            }
-        }
-    }
-    
-    internal var trunkRadius: Trunk.Radius {
-        
-        switch self {
-            
-        case .cherryBlossom: return .thin
-        case .chicle: return .thick
-        case .goldenGingko: return .thick
-        case .jacaranda: return .thick
-        case .linden: return .thick
-        case .spruce: return .thin
-        case .thujaOccidentalis: return .thick
-        }
-    }
-    
-    internal var trunkHeight: Trunk.Height {
-        
-        switch self {
-            
-        case .cherryBlossom: return .epic
-        case .chicle: return .short
-        case .goldenGingko: return .tall
-        case .jacaranda: return .short
-        case .linden: return .short
-        case .spruce: return .tall
-        case .thujaOccidentalis: return .short
-        }
-    }
-    
-    internal var trunk: Grid.Footprint.Area {
-        
-        switch self {
-            
-        case .cherryBlossom: return .escher
-        case .chicle: return .floret
-        case .goldenGingko: return .pinwheel
-        case .jacaranda: return .escher
-        case .linden: return .floret
-        case .spruce: return .escher
-        case .thujaOccidentalis: return .truchet
-        }
-    }
     
     internal func render(trunk position: Vector) throws -> Mesh {
         
-        let height = trunkHeight.value
-        let radius = trunkRadius.value
+        let height = trunk.height.value
+        let radius = trunk.radius.value
         
-        guard let stencil = Polygon(trunk.vertices(scale: .tile,
+        guard let stencil = Polygon(trunk.area.vertices(scale: .tile,
                                                    normal: .up,
                                                    color: colorPalette.tertiary)),
               let apex = stencil.inset(by: radius.apex),
