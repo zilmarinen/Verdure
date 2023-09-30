@@ -10,193 +10,166 @@ import Foundation
 
 extension FoliageType {
     
-    typealias CanopyApex = (apex: Vector,
-                            crown: Vector,
-                            throne: Vector,
-                            mantle: Vector)
-    
-    typealias CanopyRadius = (apex: Double,
-                              crown: Double,
-                              throne: Double,
-                              mantle: Double,
-                              base: Double)
-    
-    internal var canopy: Grid.Footprint.Area { area }
-    
-    internal var canopyApex: CanopyApex {
+    internal enum Canopy {
         
-        switch self {
+        internal enum Profile {
             
-        case .cherryBlossom:
+            typealias CanopyProfile = (crown: Double,
+                                       throne: Double,
+                                       mantle: Double)
             
-            let apex = Grid.Triangle.Kite.base * .silver
-            let step = apex / 5.0
+            case equal
+            case staggered
             
-            return (apex: Vector(0.0, step * 5.0, 0.0),
-                    crown: Vector(0.0, step * 3.0, 0.0),
-                    throne: Vector(0.0, step * 2.0, 0.0),
-                    mantle: Vector(0.0, step, 0.0))
+            internal var value: CanopyProfile {
+                
+                switch self {
+                    
+                case .equal: return (crown: 0.75,
+                                     throne: 0.5,
+                                     mantle: 0.25)
+                    
+                case .staggered: return (crown: 0.8,
+                                         throne: 0.3,
+                                         mantle: 0.1)
+                }
+            }
+        }
+        
+        internal enum Radius {
             
-        case .chicle:
+            typealias CanopyRadius = (apex: Double,
+                                      crown: Double,
+                                      throne: Double,
+                                      mantle: Double,
+                                      base: Double)
+         
+            case thin
+            case thick
             
-            return (apex: Vector(0.0, 1.0, 0.0),
-                    crown: Vector(0.0, 0.75, 0.0),
-                    throne: Vector(0.0, 0.5, 0.0),
-                    mantle: Vector(0.0, 0.25, 0.0))
+            internal var value: CanopyRadius {
+                
+                switch self {
+                    
+                case .thin: return (apex: 0.2,
+                                    crown: 0.1,
+                                    throne: 0.0,
+                                    mantle: 0.1,
+                                    base: 0.2)
+                    
+                case .thick: return (apex: 0.2,
+                                     crown: 0.1,
+                                     throne: 0.0,
+                                     mantle: 0.1,
+                                     base: 0.2)
+                }
+            }
+        }
+        
+        internal enum Height {
             
-        case .goldenGingko:
+            case epic
+            case tall
+            case short
             
-            let apex = Grid.Triangle.Kite.base * .silver * .silver
-            let step = apex / 6.0
-            
-            return (apex: Vector(0.0, step * 6.0, 0.0),
-                    crown: Vector(0.0, step * 3.0, 0.0),
-                    throne: Vector(0.0, step * 2.0, 0.0),
-                    mantle: Vector(0.0, step, 0.0))
-            
-        case .jacaranda:
-            
-            let apex = Grid.Triangle.Kite.base * .silver * (.silver / 2.0)
-            let step = apex / 7.0
-            
-            return (apex: Vector(0.0, step * 7.0, 0.0),
-                    crown: Vector(0.0, step * 4.0, 0.0),
-                    throne: Vector(0.0, step * 2.0, 0.0),
-                    mantle: Vector(0.0, step, 0.0))
-            
-        case .spruce:
-            
-            let apex = Grid.Triangle.Kite.base * .silver * 2.0
-            let step = apex / 5.0
-            
-            return (apex: Vector(0.0, step * 5.0, 0.0),
-                    crown: Vector(0.0, step * 3.0, 0.0),
-                    throne: Vector(0.0, step * 2.0, 0.0),
-                    mantle: Vector(0.0, step, 0.0))
-            
-        default:
-            
-            let apex = Grid.Triangle.Kite.base * .silver
-            let step = apex / 5.0
-            
-            return (apex: Vector(0.0, step * 5.0, 0.0),
-                    crown: Vector(0.0, step * 3.0, 0.0),
-                    throne: Vector(0.0, step * 2.0, 0.0),
-                    mantle: Vector(0.0, step, 0.0))
+            internal var value: Double {
+                
+                switch self {
+                
+                case .epic: return 3.0
+                case .tall: return 2.0
+                case .short: return 1.0
+                }
+            }
         }
     }
     
-    internal var canopyRadius: CanopyRadius {
+    internal var canopyProfile: Canopy.Profile {
         
         switch self {
             
-        case .cherryBlossom:
+        case .cherryBlossom: return .staggered
+        case .chicle: return .equal
+        case .goldenGingko: return .equal
+        case .jacaranda: return .staggered
+        case .linden: return .staggered
+        case .spruce: return .staggered
+        case .thujaOccidentalis: return .staggered
+        }
+    }
+    
+    internal var canopyRadius: Canopy.Radius {
+        
+        switch self {
             
-            let radius = 0.21
-            let step = radius / 5.0
+        case .cherryBlossom: return .thin
+        case .chicle: return .thick
+        case .goldenGingko: return .thick
+        case .jacaranda: return .thin
+        case .linden: return .thick
+        case .spruce: return .thin
+        case .thujaOccidentalis: return .thick
+        }
+    }
+    
+    internal var canopyHeight: Canopy.Height {
+        
+        switch self {
             
-            return (apex: step * 5.0,
-                    crown: step * 2.0,
-                    throne: step * 1.0,
-                    mantle: step * 3.0,
-                    base: step * 5.0)
-            
-        case .chicle:
-            
-            let radius = 0.21
-            let step = radius / 5.0
-            
-            return (apex: step * 5.0,
-                    crown: step * 2.0,
-                    throne: step * 1.0,
-                    mantle: step * 3.0,
-                    base: step * 5.0)
-            
-        case .goldenGingko:
-            
-            let radius = 0.4
-            let step = radius / 5.0
-            
-            return (apex: step * 6.0,
-                    crown: step * 2.0,
-                    throne: step * 1.0,
-                    mantle: step * 2.0,
-                    base: step * 3.5)
-            
-        case .jacaranda:
-            
-            let radius = 0.21
-            let step = radius / 6.0
-            
-            return (apex: step * 6.0,
-                    crown: step * 2.0,
-                    throne: step * 1.0,
-                    mantle: step * 2.0,
-                    base: step * 4.5)
-            
-        case .spruce:
-            
-            let radius = 0.3
-            let step = radius / 5.0
-            
-            return (apex: step * 6.0,
-                    crown: step * 2.0,
-                    throne: step * 1.0,
-                    mantle: step * 0.5,
-                    base: step * 5.0)
-            
-        default:
-            
-            let radius = 0.21
-            let step = radius / 5.0
-            
-            return (apex: step * 5.0,
-                    crown: step * 2.0,
-                    throne: step * 2.0,
-                    mantle: step * 3.0,
-                    base: step * 5.0)
+        case .cherryBlossom: return .tall
+        case .chicle: return .short
+        case .goldenGingko: return .tall
+        case .jacaranda: return .short
+        case .linden: return .short
+        case .spruce: return .epic
+        case .thujaOccidentalis: return .tall
         }
     }
     
     internal func render(canopy position: Vector) throws -> Mesh {
         
-        let radius = canopyRadius
+        let height = canopyHeight.value
+        let profile = canopyProfile.value
+        let radius = canopyRadius.value
         
-        guard let stencil = Polygon(canopy.vertices(scale: .tile,
-                                                    normal: .up,
-                                                    color: colorPalette.primary)),
+        guard let stencil = Polygon(area.vertices(scale: .tile,
+                                                  normal: .up,
+                                                  color: colorPalette.primary)),
               let apex = stencil.inset(by: radius.apex),
               let crown = stencil.inset(by: radius.crown),
               let throne = stencil.inset(by: radius.throne),
               let mantle = stencil.inset(by: radius.mantle),
               let base = stencil.inset(by: radius.base) else { throw MeshError.invalidStencil }
         
-        let peak = canopyApex
+        let apexElevation = Vector(0.0, height, 0.0)
+        let crownElevation = Vector(0.0, height * profile.crown, 0.0)
+        let throneElevation = Vector(0.0, height * profile.throne, 0.0)
+        let mantleElevation = Vector(0.0, height * profile.mantle, 0.0)
+        
+        let crownColor = colorPalette.secondary.lerp(colorPalette.primary, profile.crown)
+        let throneColor = colorPalette.secondary.lerp(colorPalette.primary, profile.throne)
+        let mantleColor = colorPalette.secondary.lerp(colorPalette.primary, profile.throne)
+        
+        let colors = [[colorPalette.secondary, colorPalette.secondary, mantleColor, mantleColor],
+                      [mantleColor, mantleColor, throneColor, throneColor],
+                      [throneColor, throneColor, crownColor, crownColor],
+                      [crownColor, crownColor, colorPalette.primary, colorPalette.primary]]
         
         var polygons = [base.inverted().translated(by: position),
-                        apex.translated(by: position + peak.apex)]
-        
-        let c0 = colorPalette.primary.lerp(colorPalette.secondary, 0.25)
-        let c1 = colorPalette.primary.lerp(colorPalette.secondary, 0.5)
-        let c2 = colorPalette.primary.lerp(colorPalette.secondary, 0.75)
-        
-        let colors = [[colorPalette.secondary, colorPalette.secondary, c2, c2],
-                      [c2, c2, c1, c1],
-                      [c1, c1, c0, c0],
-                      [c0, c0, colorPalette.primary, colorPalette.primary]]
+                        apex.translated(by: position + apexElevation)]
         
         for i in stencil.vertices.indices {
 
             let j = (i + 1) % stencil.vertices.count
 
-            let av0 = position + apex.vertices[i].position + peak.apex
-            let av1 = position + apex.vertices[j].position + peak.apex
-            let cv0 = position + crown.vertices[i].position + peak.crown
-            let cv1 = position + crown.vertices[j].position + peak.crown
-            let tv0 = position + throne.vertices[i].position + peak.throne
-            let tv1 = position + throne.vertices[j].position + peak.throne
-            let mv0 = position + mantle.vertices[i].position + peak.mantle
-            let mv1 = position + mantle.vertices[j].position + peak.mantle
+            let av0 = position + apex.vertices[i].position + apexElevation
+            let av1 = position + apex.vertices[j].position + apexElevation
+            let cv0 = position + crown.vertices[i].position + crownElevation
+            let cv1 = position + crown.vertices[j].position + crownElevation
+            let tv0 = position + throne.vertices[i].position + throneElevation
+            let tv1 = position + throne.vertices[j].position + throneElevation
+            let mv0 = position + mantle.vertices[i].position + mantleElevation
+            let mv1 = position + mantle.vertices[j].position + mantleElevation
             let bv0 = position + base.vertices[i].position
             let bv1 = position + base.vertices[j].position
 
@@ -220,8 +193,74 @@ extension FoliageType {
 
 extension FoliageType {
     
-    typealias TrunkRadius = (apex: Double,
-                             base: Double)
+    internal enum Trunk {
+        
+        internal enum Radius {
+            
+            typealias TrunkRadius = (apex: Double,
+                                     base: Double)
+         
+            case thin
+            case thick
+            
+            internal var value: TrunkRadius {
+                
+                switch self {
+                    
+                case .thin: return (apex: 0.25,
+                                    base: 0.15)
+                    
+                case .thick: return (apex: 0.25,
+                                     base: 0.1)
+                }
+            }
+        }
+        
+        internal enum Height {
+            
+            case epic
+            case tall
+            case short
+            
+            internal var value: Double {
+                
+                switch self {
+                
+                case .epic: return 1.5
+                case .tall: return 1.0
+                case .short: return 0.5
+                }
+            }
+        }
+    }
+    
+    internal var trunkRadius: Trunk.Radius {
+        
+        switch self {
+            
+        case .cherryBlossom: return .thin
+        case .chicle: return .thick
+        case .goldenGingko: return .thick
+        case .jacaranda: return .thick
+        case .linden: return .thick
+        case .spruce: return .thin
+        case .thujaOccidentalis: return .thick
+        }
+    }
+    
+    internal var trunkHeight: Trunk.Height {
+        
+        switch self {
+            
+        case .cherryBlossom: return .epic
+        case .chicle: return .short
+        case .goldenGingko: return .tall
+        case .jacaranda: return .short
+        case .linden: return .short
+        case .spruce: return .tall
+        case .thujaOccidentalis: return .short
+        }
+    }
     
     internal var trunk: Grid.Footprint.Area {
         
@@ -237,68 +276,28 @@ extension FoliageType {
         }
     }
     
-    internal var trunkApex: Vector {
-        
-        switch self {
-            
-        case .cherryBlossom: return Vector(0.0, Grid.Triangle.Kite.base * 1.5, 0.0)
-        case .chicle: return Vector(0.0, Grid.Triangle.Kite.base, 0.0)
-        case .goldenGingko: return Vector(0.0, Grid.Triangle.Kite.base, 0.0)
-        case .jacaranda: return Vector(0.0, Grid.Triangle.Kite.base * 1.5, 0.0)
-        case .linden: return Vector(0.0, Grid.Triangle.Kite.base, 0.0)
-        case .spruce: return Vector(0.0, Grid.Triangle.Kite.base, 0.0)
-        case .thujaOccidentalis: return Vector(0.0, Grid.Triangle.Kite.base, 0.0)
-        }
-    }
-    
-    internal var trunkRadius: TrunkRadius {
-        
-        switch self {
-            
-        case .cherryBlossom: return (apex: 0.25,
-                                     base: 0.15)
-            
-        case .chicle: return (apex: 0.25,
-                              base: 0.15)
-            
-        case .goldenGingko: return (apex: 0.25,
-                                    base: 0.15)
-            
-        case .jacaranda: return (apex: 0.25,
-                                 base: 0.15)
-            
-        case .linden: return (apex: 0.25,
-                              base: 0.15)
-            
-        case .spruce: return (apex: 0.25,
-                              base: 0.15)
-            
-        case .thujaOccidentalis: return (apex: 0.25,
-                                         base: 0.15)
-        }
-    }
-    
     internal func render(trunk position: Vector) throws -> Mesh {
         
-        let radius = trunkRadius
+        let height = trunkHeight.value
+        let radius = trunkRadius.value
         
         guard let stencil = Polygon(trunk.vertices(scale: .tile,
                                                    normal: .up,
                                                    color: colorPalette.tertiary)),
-              let base = stencil.inset(by: radius.base),
-              let apex = stencil.inset(by: radius.apex) else { throw MeshError.invalidStencil }
+              let apex = stencil.inset(by: radius.apex),
+              let base = stencil.inset(by: radius.base) else { throw MeshError.invalidStencil }
         
-        let peak = trunkApex
+        let apexElevation = Vector(0.0, height, 0.0)
         
         var polygons = [base.inverted().translated(by: position),
-                        apex.translated(by: position + peak)]
+                        apex.translated(by: position + apexElevation)]
         
         for i in stencil.vertices.indices {
             
             let j = (i + 1) % stencil.vertices.count
             
-            let av0 = position + apex.vertices[i].position + peak
-            let av1 = position + apex.vertices[j].position + peak
+            let av0 = position + apex.vertices[i].position + apexElevation
+            let av1 = position + apex.vertices[j].position + apexElevation
             let bv0 = position + base.vertices[i].position
             let bv1 = position + base.vertices[j].position
             
@@ -319,5 +318,58 @@ extension FoliageType {
         }
         
         return Mesh(polygons)
+    }
+}
+
+extension FoliageType {
+    
+    internal enum Theme {
+     
+        internal static let darkTrunkPrimary = Color("65451F")
+        internal static let darkTrunkSecondary = Color("765827")
+        
+        internal static let lightTrunkPrimary = Color("C8AE7D")
+        internal static let lightTrunkSecondary = Color("EAC696")
+    }
+    
+    public var colorPalette: ColorPalette {
+        
+        switch self {
+            
+        case .cherryBlossom: return .init(primary: Color("F8C4B4"),
+                                          secondary: Color("FF8787"),
+                                          tertiary: Theme.lightTrunkPrimary,
+                                          quaternary: Theme.lightTrunkSecondary)
+            
+        case .chicle: return .init(primary: Color("F11A7B"),
+                                   secondary: Color("982176"),
+                                   tertiary: Theme.lightTrunkPrimary,
+                                   quaternary: Theme.lightTrunkSecondary)
+            
+        case .goldenGingko: return .init(primary: Color("F2BE22"),
+                                         secondary: Color("F29727"),
+                                         tertiary: Theme.darkTrunkPrimary,
+                                         quaternary: Theme.darkTrunkPrimary)
+            
+        case .jacaranda: return .init(primary: Color("713ABE"),
+                                      secondary: Color("5B0888"),
+                                      tertiary: Theme.lightTrunkPrimary,
+                                      quaternary: Theme.lightTrunkSecondary)
+            
+        case .linden: return .init(primary: Color("176B87"),
+                                   secondary: Color("053B50"),
+                                   tertiary: Theme.lightTrunkPrimary,
+                                   quaternary: Theme.lightTrunkSecondary)
+            
+        case .spruce: return .init(primary: Color("7A9D54"),
+                                   secondary: Color("557A46"),
+                                   tertiary: Theme.darkTrunkPrimary,
+                                   quaternary: Theme.darkTrunkSecondary)
+            
+        case .thujaOccidentalis: return .init(primary: Color("C3EDC0"),
+                                              secondary: Color("79AC78"),
+                                              tertiary: Theme.darkTrunkPrimary,
+                                              quaternary: Theme.darkTrunkPrimary)
+        }
     }
 }
