@@ -22,17 +22,40 @@ class AppViewModel: ObservableObject {
         }
     }
     
+    @Published var profile: Mesh.Profile = .init(polygonCount: 0,
+                                                 vertexCount: 0)
+    
     let scene = Scene()
     
     private let operationQueue = OperationQueue()
     
+    private var cache: FoliageCache?
+    
     init() {
         
-        updateScene()
+        generateCache()
     }
 }
 
 extension AppViewModel {
+    
+    private func generateCache() {
+            
+        let operation = FoliageCacheOperation()
+        
+        operation.enqueue(on: operationQueue) { [weak self] result in
+            
+            guard let self else { return }
+            
+            switch result {
+                
+            case .success(let cache): self.cache = cache
+            case .failure(let error): fatalError(error.localizedDescription)
+            }
+            
+            self.updateScene()
+        }
+    }
     
     private func createNode(with mesh: Mesh?) -> SCNNode? {
         
@@ -54,29 +77,17 @@ extension AppViewModel {
     
     private func updateScene() {
         
-        let operation = FoliageMeshOperation(foliageType: foliageType)
+        self.scene.clear()
+                
+        self.updateSurface()
         
-        operation.enqueue(on: operationQueue) { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-                
-            case .success(let mesh):
-                
-                self.scene.clear()
-                
-                self.updateSurface()
-                
-                guard let node = self.createNode(with: mesh) else { return }
-                
-                self.scene.rootNode.addChildNode(node)
-                
-            case .failure(let error):
-                
-                fatalError(error.localizedDescription)
-            }
-        }
+        guard let cache,
+              let mesh = cache.mesh(for: foliageType),
+              let node = self.createNode(with: mesh) else { return }
+        
+        self.scene.rootNode.addChildNode(node)
+        
+        self.updateProfile(for: mesh)
     }
     
     private func updateSurface() {
@@ -99,5 +110,15 @@ extension AppViewModel {
         guard let node = createNode(with: mesh) else { return }
         
         scene.rootNode.addChildNode(node)
+    }
+    
+    private func updateProfile(for mesh: Mesh) {
+        
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self else { return }
+            
+            self.profile = mesh.profile
+        }
     }
 }

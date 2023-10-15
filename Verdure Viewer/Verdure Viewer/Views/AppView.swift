@@ -20,7 +20,14 @@ struct AppView: View {
                 sceneView
             }
         #else
-            sceneView
+            ZStack(alignment: .bottomTrailing) {
+                        
+                sceneView
+                
+                Text("Polygons: [\(viewModel.profile.polygonCount)] Vertices: [\(viewModel.profile.vertexCount)]")
+                    .foregroundColor(.black)
+                    .padding()
+            }
         #endif
     }
     
