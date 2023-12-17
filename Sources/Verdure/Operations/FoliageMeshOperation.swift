@@ -19,6 +19,8 @@ public class FoliageMeshOperation: ConcurrentOperation,
     public init(foliageType: FoliageType) {
         
         self.foliageType = foliageType
+        
+        super.init()
     }
     
     public override func execute() {

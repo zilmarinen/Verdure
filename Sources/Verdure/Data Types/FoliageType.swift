@@ -1,12 +1,53 @@
 //
 //  FoliageType.swift
 //
-//  Created by Zack Brown on 21/09/2023.
+//  Created by Zack Brown on 04/09/2023.
 //
 
 import Bivouac
 import Euclid
 import Foundation
+
+public enum FoliageType: Int,
+                         CaseIterable,
+                         Identifiable {
+
+    case cherryBlossom
+    case chicle
+    case goldenGingko
+    case jacaranda
+    case linden
+    case spruce
+    case thujaOccidentalis
+    
+    public var id: String {
+        
+        switch self {
+            
+        case .cherryBlossom: return "Cherry Blossom"
+        case .chicle: return "Chicle"
+        case .goldenGingko: return "Golden Gingko"
+        case .jacaranda: return "Jacaranda"
+        case .linden: return "Linden"
+        case .spruce: return "Spruce"
+        case .thujaOccidentalis: return "Thuja Occidentalis"
+        }
+    }
+    
+    public var area: Grid.Footprint.Area {
+        
+        switch self {
+            
+        case .cherryBlossom: return .truchet
+        case .chicle: return .pinwheel
+        case .goldenGingko: return .penrose
+        case .jacaranda: return .wang
+        case .linden: return .snub
+        case .spruce: return .floret
+        case .thujaOccidentalis: return .voronoi
+        }
+    }
+}
 
 extension FoliageType {
     
@@ -290,8 +331,8 @@ extension FoliageType {
             
             for i in vectors.indices {
                 
-                let face = Polygon.Face(vectors[i],
-                                        colors: colors[i])
+                let face = Face(vectors[i],
+                                colors: colors[i])
 
                 try polygons.glue(face?.polygon)
             }
@@ -335,8 +376,8 @@ extension FoliageType {
                           colorPalette.tertiary,
                           colorPalette.tertiary]
             
-            let face = Polygon.Face(vectors,
-                                    colors: colors)
+            let face = Face(vectors,
+                            colors: colors)
             
             try polygons.glue(face?.polygon)
         }

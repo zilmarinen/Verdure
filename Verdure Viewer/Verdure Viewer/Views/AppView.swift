@@ -5,30 +5,39 @@
 //
 
 import Bivouac
+import Dependencies
 import SceneKit
 import SwiftUI
+import Verdure
 
 struct AppView: View {
+    
+    @Dependency(\.deviceManager) var deviceManager
     
     @ObservedObject private var viewModel = AppViewModel()
     
     var body: some View {
-        
+            
         #if os(iOS)
             NavigationStack {
         
-                sceneView
+                viewer
             }
         #else
-            ZStack(alignment: .bottomTrailing) {
-                        
-                sceneView
-                
-                Text("Polygons: [\(viewModel.profile.polygonCount)] Vertices: [\(viewModel.profile.vertexCount)]")
-                    .foregroundColor(.black)
-                    .padding()
-            }
+            viewer
         #endif
+    }
+    
+    var viewer: some View {
+        
+        ZStack(alignment: .bottomTrailing) {
+            
+            sceneView
+            
+            Text("Polygons: [\(viewModel.profile.polygonCount)] Vertices: [\(viewModel.profile.vertexCount)]")
+                .foregroundColor(.black)
+                .padding()
+        }
     }
     
     var sceneView: some View {
@@ -36,7 +45,8 @@ struct AppView: View {
         SceneView(scene: viewModel.scene,
                   pointOfView: viewModel.scene.camera.pov,
                   options: [.allowsCameraControl,
-                            .autoenablesDefaultLighting])
+                            .autoenablesDefaultLighting],
+                  technique: deviceManager.technique)
         .toolbar {
             
             ToolbarItemGroup {

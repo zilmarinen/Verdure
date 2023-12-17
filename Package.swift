@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Verdure",
-    platforms: [.macOS(.v11),
+    platforms: [.macOS(.v12),
                 .iOS(.v13)],
     products: [
         .library(
