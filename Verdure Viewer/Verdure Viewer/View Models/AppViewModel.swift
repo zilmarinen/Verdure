@@ -5,6 +5,7 @@
 //
 
 import Bivouac
+import Deltille
 import Euclid
 import Foundation
 import SceneKit
@@ -89,7 +90,7 @@ extension AppViewModel {
         
         var polygons: [Euclid.Polygon] = []
         
-        for coordinate in foliageType.area.footprint {
+        for coordinate in foliageType.area.coordinates {
             
             let triangle = Grid.Triangle(coordinate)
             

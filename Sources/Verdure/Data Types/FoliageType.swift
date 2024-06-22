@@ -5,36 +5,25 @@
 //
 
 import Bivouac
+import Deltille
 import Euclid
 import Foundation
 
-public enum FoliageType: Int,
+public enum FoliageType: String,
                          CaseIterable,
                          Identifiable {
 
-    case cherryBlossom
+    case cherryBlossom = "Cherry Blossom"
     case chicle
-    case goldenGingko
+    case goldenGingko = "Golden Gingko"
     case jacaranda
     case linden
     case spruce
-    case thujaOccidentalis
+    case thujaOccidentalis = "Thuja Occidentalis"
     
-    public var id: String {
-        
-        switch self {
-            
-        case .cherryBlossom: return "Cherry Blossom"
-        case .chicle: return "Chicle"
-        case .goldenGingko: return "Golden Gingko"
-        case .jacaranda: return "Jacaranda"
-        case .linden: return "Linden"
-        case .spruce: return "Spruce"
-        case .thujaOccidentalis: return "Thuja Occidentalis"
-        }
-    }
+    public var id: String { rawValue.capitalized }
     
-    public var area: Grid.Footprint.Area {
+    public var area: Grid.Canopy {
         
         switch self {
             
@@ -269,7 +258,7 @@ extension FoliageType {
             }
         }
         
-        internal let area: Grid.Footprint.Area
+        internal let area: Grid.Canopy
         internal let height: Height
         internal let radius: Radius
     }
@@ -334,7 +323,7 @@ extension FoliageType {
                 let face = Face(vectors[i],
                                 colors: colors[i])
 
-                try polygons.glue(face?.polygon)
+                try polygons.append(face?.polygon)
             }
         }
         
@@ -379,7 +368,7 @@ extension FoliageType {
             let face = Face(vectors,
                             colors: colors)
             
-            try polygons.glue(face?.polygon)
+            try polygons.append(face?.polygon)
         }
         
         return Mesh(polygons)

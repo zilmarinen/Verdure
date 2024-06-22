@@ -5,6 +5,7 @@
 //
 
 import Bivouac
+import Deltille
 import Euclid
 import Foundation
 import PeakOperation
