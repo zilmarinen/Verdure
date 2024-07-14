@@ -7,17 +7,17 @@
 import Bivouac
 import Deltille
 import Euclid
-import Foundation
 
-extension Grid.Canopy {
+extension Grid.Triangle.Canopy {
     
-    internal func vertices(scale: Grid.Scale,
+    internal func vertices(scale: Grid.Triangle.Scale,
                            normal: Vector,
-                           color: Color) -> [Vertex] { coordinates.map { Vertex($0.convert(to: scale),
+                           color: Color) -> [Vertex] { coordinates.map { Vertex(Vector($0,
+                                                                                       scale),
                                                                                 normal,
                                                                                 nil,
                                                                                 color)} }
     
-    func center(at scale: Grid.Scale) -> Vector { .zero }
+    func center(at scale: Grid.Triangle.Scale) -> Vector { .zero }
 }
 

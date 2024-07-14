@@ -12,7 +12,7 @@ import PeakOperation
 public class FoliageCacheOperation: ConcurrentOperation,
                                    ProducesResult {
     
-    public var output: Result<FoliageCache, Error> = Result { throw ResultError.noResult }
+    public var output: Result<[String : Mesh], Error> = Result { throw ResultError.noResult }
 
     public override func execute() {
         
@@ -21,7 +21,7 @@ public class FoliageCacheOperation: ConcurrentOperation,
                                   attributes: .concurrent)
         
         var errors: [Error] = []
-        var meshes: [FoliageType : Mesh] = [:]
+        var meshes: [String : Mesh] = [:]
         
         for foliageType in FoliageType.allCases {
             
@@ -35,7 +35,7 @@ public class FoliageCacheOperation: ConcurrentOperation,
                     
                     switch result {
                         
-                    case .success(let mesh): meshes[foliageType] = mesh
+                    case .success(let mesh): meshes[foliageType.id] = mesh
                     case .failure(let error): errors.append(error)
                     }
                     
@@ -46,7 +46,7 @@ public class FoliageCacheOperation: ConcurrentOperation,
         
         group.wait()
         
-        self.output = errors.isEmpty ? .success(.init(meshes: meshes)) : .failure(MeshError.errors(errors))
+        self.output = errors.isEmpty ? .success(meshes) : .failure(MeshError.errors(errors))
 
         finish()
     }

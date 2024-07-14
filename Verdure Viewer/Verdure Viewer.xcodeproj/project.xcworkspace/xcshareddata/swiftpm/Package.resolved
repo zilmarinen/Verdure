@@ -10,12 +10,12 @@
       }
     },
     {
-      "identity" : "deltille",
+      "identity" : "euclid",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:zilmarinen/Deltille.git",
+      "location" : "git@github.com:nicklockwood/Euclid.git",
       "state" : {
         "branch" : "main",
-        "revision" : "96ca32c77fa9b7de78b975a329b7daba26d7daae"
+        "revision" : "00a39468d274a3081966ed115ef5f18cd28b43ff"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "git@github.com:3Squared/PeakOperation.git",
       "state" : {
-        "branch" : "develop",
-        "revision" : "35811e5f3dc539a185601c6b3d54e0a9f9481cb1"
+        "branch" : "master",
+        "revision" : "f5070818152d65d001455992c0b414727f8e19d4"
       }
     },
     {
@@ -52,6 +52,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "9783b58167f7618cb86011156e741cbc6f4cc864"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax",
+      "state" : {
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {

@@ -68,5 +68,15 @@ struct AppView: View {
                     .id(foliageType)
             }
         }
+        
+        Button {
+                    
+            viewModel.presentExportModal()
+            
+        } label: {
+            
+          Label("Export Meshes",
+                systemImage: "square.and.arrow.up")
+        }
     }
 }

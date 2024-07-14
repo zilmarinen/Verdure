@@ -5,12 +5,13 @@
 //
 
 import Bivouac
+import Dependencies
 import Euclid
-import Foundation
 
-public struct FoliageCache {
+public final class FoliageCache: AssetCache,
+                                 DependencyKey {
     
-    public let meshes: [FoliageType : Mesh]
+    static public var liveValue = FoliageCache([:])
     
-    public func mesh(for foliageType: FoliageType) -> Mesh? { meshes[foliageType] }
+    public func mesh(for foliageType: FoliageType) -> Mesh? { mesh(foliageType.id) }
 }

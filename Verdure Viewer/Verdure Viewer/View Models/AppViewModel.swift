@@ -6,12 +6,15 @@
 
 import Bivouac
 import Deltille
+import Dependencies
 import Euclid
 import Foundation
 import SceneKit
 import Verdure
 
 class AppViewModel: ObservableObject {
+    
+    @Dependency(\.foliageCache) var foliageCache
     
     @Published var foliageType: FoliageType = .cherryBlossom {
         
@@ -26,11 +29,9 @@ class AppViewModel: ObservableObject {
     @Published var profile: Mesh.Profile = .init(polygonCount: 0,
                                                  vertexCount: 0)
     
-    let scene = Scene()
+    let scene = ModelViewScene()
     
     private let operationQueue = OperationQueue()
-    
-    private var cache: FoliageCache?
     
     init() {
         
@@ -50,7 +51,7 @@ extension AppViewModel {
             
             switch result {
                 
-            case .success(let cache): self.cache = cache
+            case .success(let meshes): foliageCache.merge(meshes)
             case .failure(let error): fatalError(error.localizedDescription)
             }
             
@@ -58,59 +59,21 @@ extension AppViewModel {
         }
     }
     
-    private func createNode(with mesh: Mesh?) -> SCNNode? {
-        
-        guard let mesh else { return nil }
-        
-        let node = SCNNode()
-        
-        node.geometry = SCNGeometry(mesh)
-        
-        return node
-    }
-    
     private func updateScene() {
         
         self.scene.clear()
+        
+        scene.render(surface: foliageType.area.coordinates)
                 
-        self.updateSurface()
+        guard let mesh = foliageCache.mesh(for: foliageType) else { return }
         
-        guard let cache,
-              let mesh = cache.mesh(for: foliageType),
-              let node = self.createNode(with: mesh) else { return }
+        let geometry = SCNGeometry(mesh)
+                
+        geometry.program = Program(function: .geometry)
         
-        self.scene.rootNode.addChildNode(node)
-        
-        node.geometry?.program = Program(function: .geometry)
+        scene.model.geometry = geometry
         
         self.updateProfile(for: mesh)
-    }
-    
-    private func updateSurface() {
-        
-        var polygons: [Euclid.Polygon] = []
-        
-        for coordinate in foliageType.area.coordinates {
-            
-            let triangle = Grid.Triangle(coordinate)
-            
-            let vertices = triangle.corners(for: .tile).map { Vertex($0,
-                                                                     .up,
-                                                                     nil,
-                                                                     .gray) }
-            
-            guard let polygon = Polygon(vertices) else { continue }
-            
-            polygons.append(polygon)
-        }
-        
-        let mesh = Mesh(polygons)
-        
-        guard let node = createNode(with: mesh) else { return }
-        
-        node.geometry?.program = Program(function: .geometry)
-        
-        scene.rootNode.addChildNode(node)
     }
     
     private func updateProfile(for mesh: Mesh) {
@@ -120,6 +83,39 @@ extension AppViewModel {
             guard let self else { return }
             
             self.profile = mesh.profile
+        }
+    }
+}
+
+extension AppViewModel {
+ 
+    func presentExportModal() {
+        
+        let panel = NSOpenPanel()
+        
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.canCreateDirectories = true
+        panel.isExtensionHidden = true
+        panel.showsHiddenFiles = false
+        panel.showsTagField = false
+        
+        panel.begin { [weak self] response in
+            
+            switch response {
+                
+            case .OK:
+                
+                guard let self,
+                      let url = panel.urls.first else { return }
+                
+                let operation = FoliageMeshExportOperation(url: url)
+                
+                operation.enqueue(on: self.operationQueue)
+                
+            default: break
+            }
         }
     }
 }

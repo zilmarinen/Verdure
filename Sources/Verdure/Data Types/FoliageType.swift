@@ -9,6 +9,53 @@ import Deltille
 import Euclid
 import Foundation
 
+public extension Double {
+    func isApproximatelyEqual(to other: Double, withPrecision p: Double) -> Bool {
+        self == other || abs(self - other) < p
+    }
+}
+
+public extension Vector {
+    
+    /// Approximate equality
+    func isApproximatelyEqual(to other: Vector, withPrecision p: Double = 1e-8) -> Bool {
+        x.isApproximatelyEqual(to: other.x, withPrecision: p) &&
+            y.isApproximatelyEqual(to: other.y, withPrecision: p) &&
+            z.isApproximatelyEqual(to: other.z, withPrecision: p)
+    }
+}
+
+public extension Polygon {
+    
+    func tempEdgePlane(for edge: LineSegment) -> Plane {
+        let tangent = edge.end - edge.start
+        let normal = tangent.cross(plane.normal).normalized()
+        return Plane(normal: normal, pointOnPlane: edge.start)!
+    }
+    
+    func inset(by t: Double) -> Self? {
+        let v: [Vertex] = orderedEdges.indices.compactMap {
+            let e0 = orderedEdges[$0]
+            let e1 = orderedEdges[($0 + 1) % orderedEdges.count]
+
+            let p0 = tempEdgePlane(for: e0)
+            let p1 = tempEdgePlane(for: e1)
+
+            let lhs = p0.translated(by: -p0.normal * t)
+            let rhs = p1.translated(by: -p1.normal * t)
+
+            let vertex = vertices.first { $0.position.isApproximatelyEqual(to: e0.end) }
+
+            guard let vertex,
+                  let intersection = lhs.intersection(with: rhs) else { return nil }
+
+            return Vertex(intersection.origin, vertex.normal, vertex.texcoord, vertex.color)
+        }
+
+        return Self(v)
+    }
+}
+
 public enum FoliageType: String,
                          CaseIterable,
                          Identifiable {
@@ -23,7 +70,7 @@ public enum FoliageType: String,
     
     public var id: String { rawValue.capitalized }
     
-    public var area: Grid.Canopy {
+    public var area: Grid.Triangle.Canopy {
         
         switch self {
             
@@ -258,7 +305,7 @@ extension FoliageType {
             }
         }
         
-        internal let area: Grid.Canopy
+        internal let area: Grid.Triangle.Canopy
         internal let height: Height
         internal let radius: Radius
     }
@@ -320,10 +367,11 @@ extension FoliageType {
             
             for i in vectors.indices {
                 
-                let face = Face(vectors[i],
-                                colors: colors[i])
-
-                try polygons.append(face?.polygon)
+                let polygon = Polygon.face(vectors[i],
+                                           //colors[i])
+                                           colorPalette.primary)
+                
+                try polygons.append(polygon)
             }
         }
         
@@ -365,10 +413,11 @@ extension FoliageType {
                           colorPalette.tertiary,
                           colorPalette.tertiary]
             
-            let face = Face(vectors,
-                            colors: colors)
+            let polygon = Polygon.face(vectors,
+                                       //colors)
+                                       colorPalette.quaternary)
             
-            try polygons.append(face?.polygon)
+            try polygons.append(polygon)
         }
         
         return Mesh(polygons)
@@ -390,40 +439,40 @@ extension FoliageType {
         
         switch self {
             
-        case .cherryBlossom: return .init(primary: Color("F8C4B4"),
-                                          secondary: Color("FF8787"),
-                                          tertiary: Theme.lightTrunkPrimary,
-                                          quaternary: Theme.lightTrunkSecondary)
+        case .cherryBlossom: return .init(Color("F8C4B4"),
+                                          Color("FF8787"),
+                                          Theme.lightTrunkPrimary,
+                                          Theme.lightTrunkSecondary)
             
-        case .chicle: return .init(primary: Color("F11A7B"),
-                                   secondary: Color("982176"),
-                                   tertiary: Theme.lightTrunkPrimary,
-                                   quaternary: Theme.lightTrunkSecondary)
+        case .chicle: return .init(Color("F11A7B"),
+                                   Color("982176"),
+                                   Theme.lightTrunkPrimary,
+                                   Theme.lightTrunkSecondary)
             
-        case .goldenGingko: return .init(primary: Color("F2BE22"),
-                                         secondary: Color("F29727"),
-                                         tertiary: Theme.darkTrunkPrimary,
-                                         quaternary: Theme.darkTrunkPrimary)
+        case .goldenGingko: return .init(Color("F2BE22"),
+                                         Color("F29727"),
+                                         Theme.darkTrunkPrimary,
+                                         Theme.darkTrunkPrimary)
             
-        case .jacaranda: return .init(primary: Color("713ABE"),
-                                      secondary: Color("5B0888"),
-                                      tertiary: Theme.lightTrunkPrimary,
-                                      quaternary: Theme.lightTrunkSecondary)
+        case .jacaranda: return .init(Color("713ABE"),
+                                      Color("5B0888"),
+                                      Theme.lightTrunkPrimary,
+                                      Theme.lightTrunkSecondary)
             
-        case .linden: return .init(primary: Color("176B87"),
-                                   secondary: Color("053B50"),
-                                   tertiary: Theme.lightTrunkPrimary,
-                                   quaternary: Theme.lightTrunkSecondary)
+        case .linden: return .init(Color("176B87"),
+                                   Color("053B50"),
+                                   Theme.lightTrunkPrimary,
+                                   Theme.lightTrunkSecondary)
             
-        case .spruce: return .init(primary: Color("7A9D54"),
-                                   secondary: Color("557A46"),
-                                   tertiary: Theme.darkTrunkPrimary,
-                                   quaternary: Theme.darkTrunkSecondary)
+        case .spruce: return .init(Color("7A9D54"),
+                                   Color("557A46"),
+                                   Theme.darkTrunkPrimary,
+                                   Theme.darkTrunkSecondary)
             
-        case .thujaOccidentalis: return .init(primary: Color("C3EDC0"),
-                                              secondary: Color("79AC78"),
-                                              tertiary: Theme.darkTrunkPrimary,
-                                              quaternary: Theme.darkTrunkPrimary)
+        case .thujaOccidentalis: return .init(Color("C3EDC0"),
+                                              Color("79AC78"),
+                                              Theme.darkTrunkPrimary,
+                                              Theme.darkTrunkPrimary)
         }
     }
 }
