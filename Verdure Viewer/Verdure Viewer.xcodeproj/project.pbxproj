@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1808C8A72C401530008DCE1C /* FoliageMeshExportOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1808C8A62C401530008DCE1C /* FoliageMeshExportOperation.swift */; };
 		18568EA22AA5E84A00D9A4FA /* Verdure in Frameworks */ = {isa = PBXBuildFile; productRef = 18568EA12AA5E84A00D9A4FA /* Verdure */; };
 		18B60AD62AA5E45A00686F5B /* Verdure_ViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B60AD52AA5E45A00686F5B /* Verdure_ViewerApp.swift */; };
 		18B60AD82AA5E45A00686F5B /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B60AD72AA5E45A00686F5B /* AppView.swift */; };
@@ -16,7 +15,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1808C8A62C401530008DCE1C /* FoliageMeshExportOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoliageMeshExportOperation.swift; sourceTree = "<group>"; };
 		18B60AD22AA5E45A00686F5B /* Verdure Viewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Verdure Viewer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18B60AD52AA5E45A00686F5B /* Verdure_ViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verdure_ViewerApp.swift; sourceTree = "<group>"; };
 		18B60AD72AA5E45A00686F5B /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
@@ -38,14 +36,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1808C8A52C401523008DCE1C /* Operations */ = {
-			isa = PBXGroup;
-			children = (
-				1808C8A62C401530008DCE1C /* FoliageMeshExportOperation.swift */,
-			);
-			path = Operations;
-			sourceTree = "<group>";
-		};
 		18568EA02AA5E84A00D9A4FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -74,7 +64,6 @@
 		18B60AD42AA5E45A00686F5B /* Verdure Viewer */ = {
 			isa = PBXGroup;
 			children = (
-				1808C8A52C401523008DCE1C /* Operations */,
 				18B60AE52AA5E51200686F5B /* View Models */,
 				18B60AE42AA5E50C00686F5B /* Views */,
 				18B60AD52AA5E45A00686F5B /* Verdure_ViewerApp.swift */,
@@ -180,7 +169,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1808C8A72C401530008DCE1C /* FoliageMeshExportOperation.swift in Sources */,
 				18B60AD82AA5E45A00686F5B /* AppView.swift in Sources */,
 				18B60AD62AA5E45A00686F5B /* Verdure_ViewerApp.swift in Sources */,
 				18B60AE72AA5E73200686F5B /* AppViewModel.swift in Sources */,

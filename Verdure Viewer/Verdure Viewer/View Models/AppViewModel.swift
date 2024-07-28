@@ -110,7 +110,8 @@ extension AppViewModel {
                 guard let self,
                       let url = panel.urls.first else { return }
                 
-                let operation = FoliageMeshExportOperation(url: url)
+                let operation = AssetCacheExportOperation(foliageCache,
+                                                          url)
                 
                 operation.enqueue(on: self.operationQueue)
                 
