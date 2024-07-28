@@ -64,7 +64,7 @@ struct AppView: View {
             
             ForEach(FoliageType.allCases, id: \.self) { foliageType in
                 
-                Text(foliageType.id.capitalized)
+                Text(foliageType.id)
                     .id(foliageType)
             }
         }

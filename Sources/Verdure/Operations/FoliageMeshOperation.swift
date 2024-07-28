@@ -28,15 +28,16 @@ public class FoliageMeshOperation: ConcurrentOperation,
         
         do {
             
-            let origin = foliageType.area.center(at: .tile)
-            let trunkOrigin = foliageType.trunk.area.center(at: .tile)
-            let canopyOrigin = foliageType.area.center(at: .tile)
-            let canopyElevation = Vector(0.0, foliageType.trunk.height.value, 0.0)
+            let trunk = try foliageType.trunk.mesh(foliageType.colorPalette)
+            let canopy = try foliageType.canopy.mesh(foliageType.colorPalette)
             
-            let trunk = try foliageType.render(trunk: origin - trunkOrigin)
-            let canopy = try foliageType.render(canopy: (origin - canopyOrigin) + canopyElevation)
-
-            output = .success(trunk.union(canopy))
+            let origin = foliageType.footprint.center(.tile)
+            let trunkOffset = origin - foliageType.trunk.canopy.footprint.center(.tile)
+            let canopyOffset = Vector(0.0, trunk.bounds.size.y, 0.0)
+            
+            let mesh = trunk.translated(by: trunkOffset).merge(canopy.translated(by: canopyOffset))
+            
+            output = .success(mesh)
         }
         catch {
 

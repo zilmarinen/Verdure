@@ -63,7 +63,7 @@ extension AppViewModel {
         
         self.scene.clear()
         
-        scene.render(surface: foliageType.area.coordinates)
+        scene.render(surface: foliageType.footprint.coordinates)
                 
         guard let mesh = foliageCache.mesh(for: foliageType) else { return }
         

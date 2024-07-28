@@ -8,9 +8,8 @@ let package = Package(
     platforms: [.macOS(.v14),
                 .iOS(.v17)],
     products: [
-        .library(
-            name: "Verdure",
-            targets: ["Verdure"]),
+        .library(name: "Verdure",
+                 targets: ["Verdure"]),
     ],
     dependencies: [
 //        .package(url: "git@github.com:zilmarinen/Deltille.git",
@@ -21,13 +20,16 @@ let package = Package(
                  branch: "main"),
         .package(url: "git@github.com:3Squared/PeakOperation.git", 
                  branch: "master"),
+        .package(url: "git@github.com:pointfreeco/swift-dependencies.git",
+                 branch: "main")
     ],
     targets: [
-        .target(
-            name: "Verdure",
-            dependencies: ["Deltille",
-                           "Bivouac",
-                           "Euclid",
-                           "PeakOperation"]),
+        .target(name: "Verdure",
+                dependencies: ["Deltille",
+                               "Bivouac",
+                               .product(name: "Dependencies",
+                                        package: "swift-dependencies"),
+                               "Euclid",
+                               "PeakOperation"]),
     ]
 )

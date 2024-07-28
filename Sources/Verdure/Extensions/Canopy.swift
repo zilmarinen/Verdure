@@ -1,7 +1,8 @@
 //
 //  Canopy.swift
 //
-//  Created by Zack Brown on 21/09/2023.
+//
+//  Created by Zack Brown on 27/07/2024.
 //
 
 import Bivouac
@@ -9,15 +10,18 @@ import Deltille
 import Euclid
 
 extension Grid.Triangle.Canopy {
-    
-    internal func vertices(scale: Grid.Triangle.Scale,
-                           normal: Vector,
-                           color: Color) -> [Vertex] { coordinates.map { Vertex(Vector($0,
-                                                                                       scale),
-                                                                                normal,
-                                                                                nil,
-                                                                                color)} }
-    
-    func center(at scale: Grid.Triangle.Scale) -> Vector { .zero }
+ 
+    internal func vertices(_ scale: Grid.Triangle.Scale) ->  [Vector] { coordinates.map { Vector($0,
+                                                                                                 scale) } }
 }
 
+extension Grid.Triangle.Canopy {
+    
+    internal func mesh(_ colorPalette: ColorPalette) throws -> Mesh {
+        
+        Mesh.wrap(vertices(.tile),
+                  colorPalette.primary,
+                  colorPalette.secondary,
+                  1.0)
+    }
+}
