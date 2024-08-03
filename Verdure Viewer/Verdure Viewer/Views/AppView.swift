@@ -44,8 +44,7 @@ struct AppView: View {
         
         SceneView(scene: viewModel.scene,
                   pointOfView: viewModel.scene.camera.pov,
-                  options: [.allowsCameraControl,
-                            .autoenablesDefaultLighting],
+                  options: [.allowsCameraControl],
                   technique: deviceManager.technique)
         .toolbar {
             

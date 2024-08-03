@@ -16,7 +16,7 @@ class AppViewModel: ObservableObject {
     
     @Dependency(\.foliageCache) var foliageCache
     
-    @Published var foliageType: FoliageType = .cherryBlossom {
+    @Published var foliageType: FoliageType = .linden {
         
         didSet {
             
@@ -69,7 +69,7 @@ extension AppViewModel {
         
         let geometry = SCNGeometry(mesh)
                 
-        geometry.program = Program(function: .geometry)
+        //geometry.program = Program(function: .geometry)
         
         scene.model.geometry = geometry
         

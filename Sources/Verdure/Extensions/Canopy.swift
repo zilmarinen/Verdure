@@ -11,17 +11,18 @@ import Euclid
 
 extension Grid.Triangle.Canopy {
  
-    internal func vertices(_ scale: Grid.Triangle.Scale) ->  [Vector] { coordinates.map { Vector($0,
-                                                                                                 scale) } }
-}
-
-extension Grid.Triangle.Canopy {
+    internal func vertices(_ scale: Grid.Triangle.Scale) -> [Vector] { coordinates.map { Vector($0,
+                                                                                                scale) } }
     
-    internal func mesh(_ colorPalette: ColorPalette) throws -> Mesh {
+    internal var polygon: Polygon {
         
-        Mesh.wrap(vertices(.tile),
-                  colorPalette.primary,
-                  colorPalette.secondary,
-                  1.0)
+        get throws {
+            
+            let vertices = vertices(.tile).map { Vertex($0) }
+            
+            guard let polygon = Polygon(vertices) else { throw MeshError.invalidPolygon }
+            
+            return polygon
+        }
     }
 }

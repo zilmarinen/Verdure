@@ -43,21 +43,39 @@ public enum FoliageType: String,
         }
     }
     
-    internal var trunk: Trunk {
+    internal var canopyType: CanopyType {
         
         switch self {
+            
+        case .bristlecone: return .rounded
+        case .camphor: return .stacked
+        case .cherryBlossom: return .rounded
+        case .goldenGingko: return .rounded
+        case .jacaranda: return .stacked
+        case .linden: return .tapered
+        case .manilkara: return .rounded
+        case .neem: return .stacked
+        case .sequoia: return .tapered
+        case .spruce: return .tapered
+        case .thujaOccidentalis: return .stacked
+        }
+    }
+    
+    internal var trunkType: TrunkType {
         
-        case .bristlecone: return .one
-        case .camphor: return .two
-        case .cherryBlossom: return .one
-        case .goldenGingko: return .three
-        case .jacaranda: return .one
-        case .linden: return .two
-        case .manilkara: return .two
-        case .neem: return .three
-        case .sequoia: return .two
-        case .spruce: return .three
-        case .thujaOccidentalis: return .one
+        switch self {
+            
+        case .bristlecone: return .medium
+        case .camphor: return .medium
+        case .cherryBlossom: return .small
+        case .goldenGingko: return .medium
+        case .jacaranda: return .small
+        case .linden: return .small
+        case .manilkara: return .small
+        case .neem: return .small
+        case .sequoia: return .small
+        case .spruce: return .small
+        case .thujaOccidentalis: return .large
         }
     }
     
@@ -75,13 +93,13 @@ extension FoliageType {
                                         "543310",
                                         "74512D")
             
-        case .camphor: return .init("63424B",
-                                    "3A243B",
+        case .camphor: return .init("6482AD",
+                                    "7FA1C3",
                                     "543310",
                                     "74512D")
             
-        case .cherryBlossom: return .init("63424B",
-                                          "3A243B",
+        case .cherryBlossom: return .init("FF4E88",
+                                          "FF8C9E",
                                           "543310",
                                           "74512D")
             
@@ -95,10 +113,10 @@ extension FoliageType {
                                       "543310",
                                       "74512D")
           
-        case .linden: return .init("6B9362",
-                                   "2A603B",
-                                   "543310",
-                                   "74512D")
+        case .linden: return .init("21694B",
+                                   "32A47B",
+                                   "837067",
+                                   "B29C91")
             
         case .manilkara: return .init("BDA928",
                                       "473F2D",
@@ -110,8 +128,8 @@ extension FoliageType {
                                  "543310",
                                  "74512D")
             
-        case .sequoia: return .init("63424B",
-                                    "3A243B",
+        case .sequoia: return .init("DFD3C3",
+                                    "F8EDE3",
                                     "543310",
                                     "74512D")
              
