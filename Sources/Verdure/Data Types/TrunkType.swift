@@ -39,7 +39,7 @@ extension TrunkType {
         let ratio = 1.5 / 7.0
         
         guard let base = template.inset(by: -inset),
-              let trunk = template.inset(by: inset) else { throw MeshError.invalidPolygon }
+              let trunk = template.inset(by: inset) else { throw GeometryError.invalidPolygon }
         
         let vertices = canopy.vertices(.tile).mid()
         let peak = trunk.vertices.map { $0.position }.mid()

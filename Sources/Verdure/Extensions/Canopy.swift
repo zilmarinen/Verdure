@@ -20,7 +20,7 @@ extension Grid.Triangle.Canopy {
             
             let vertices = vertices(.tile).map { Vertex($0) }
             
-            guard let polygon = Polygon(vertices) else { throw MeshError.invalidPolygon }
+            guard let polygon = Polygon(vertices) else { throw GeometryError.invalidPolygon }
             
             return polygon
         }

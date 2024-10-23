@@ -69,7 +69,7 @@ extension AppViewModel {
         
         let geometry = SCNGeometry(mesh)
                 
-        //geometry.program = Program(function: .geometry)
+        geometry.program = Program(function: .geometry)
         
         scene.model.geometry = geometry
         

@@ -44,7 +44,7 @@ extension CanopyType {
         let ratio = 2.0 / 7.0
         
         guard let base = template.inset(by: -inset),
-              let apex = template.inset(by: inset) else { throw MeshError.invalidPolygon }
+              let apex = template.inset(by: inset) else { throw GeometryError.invalidPolygon }
         
         let s = Vector(0.0, ratio, 0.0)
         let t = Vector(0.0, ratio * 3.0, 0.0)
@@ -86,7 +86,7 @@ extension CanopyType {
         let ratio = 2.0 / 7.0
         
         guard let base = template.inset(by: -inset),
-              let apex = template.inset(by: inset) else { throw MeshError.invalidPolygon }
+              let apex = template.inset(by: inset) else { throw GeometryError.invalidPolygon }
         
         let a = Mesh.wrap(base.vertices.map { $0.position },
                           colorPalette.primary,
