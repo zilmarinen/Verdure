@@ -4,119 +4,80 @@
 //  Created by Zack Brown on 04/09/2023.
 //
 
-import Bivouac
 import Deltille
-import Dependencies
 import Euclid
 import Foundation
+import Lattice
 import SceneKit
-import Verdure
+import SwiftUI
 
-class AppViewModel: ObservableObject {
+internal class AppViewModel: ObservableObject {
     
-    @Dependency(\.foliageCache) var foliageCache
-    
-    @Published var foliageType: FoliageType = .linden {
+    @Published internal var septomino: Triangle.Septomino = .antlia {
         
         didSet {
             
-            guard oldValue != foliageType else { return }
+            guard oldValue != septomino else { return }
             
             updateScene()
         }
     }
     
-    @Published var profile: Mesh.Profile = .init(polygonCount: 0,
-                                                 vertexCount: 0)
+    internal let scene = SCNScene()
     
-    let scene = ModelViewScene()
+    internal let gridColor: NSColor = .grid
+    internal let gridAlternateColor: NSColor = .gridAlternate
     
-    private let operationQueue = OperationQueue()
+    internal let canopyPrimaryColor: NSColor = .canopyPrimary
+    internal let canopySecondaryColor: NSColor = .canopySecondary
+    internal let trunkColor: NSColor = .trunk
     
-    init() {
+    internal let model = SCNNode()
+    internal let wireframe = SCNNode()
+    internal let surface = SCNNode()
+    
+    internal init() {
         
-        generateCache()
+        updateScene()
+        
+        scene.rootNode.addChildNode(model)
+        scene.rootNode.addChildNode(surface)
+        
+        model.addChildNode(wireframe)
     }
 }
 
 extension AppViewModel {
-    
-    private func generateCache() {
-            
-        let operation = FoliageCacheOperation()
-        
-        operation.enqueue(on: operationQueue) { [weak self] result in
-            
-            guard let self else { return }
-            
-            switch result {
-                
-            case .success(let meshes): foliageCache.merge(meshes)
-            case .failure(let error): fatalError(error.localizedDescription)
-            }
-            
-            self.updateScene()
-        }
-    }
     
     private func updateScene() {
         
-        self.scene.clear()
+        updateFoliage()
         
-        scene.render(surface: foliageType.footprint.coordinates)
-                
-        guard let mesh = foliageCache.mesh(for: foliageType) else { return }
-        
-        let geometry = SCNGeometry(mesh)
-                
-        geometry.program = Program(function: .geometry)
-        
-        scene.model.geometry = geometry
-        
-        self.updateProfile(for: mesh)
+        updateSurface()
     }
     
-    private func updateProfile(for mesh: Mesh) {
+    private func updateFoliage() {
         
-        DispatchQueue.main.async { [weak self] in
-            
-            guard let self else { return }
-            
-            self.profile = mesh.profile
-        }
+        let mesh = septomino.foliage(.init(canopyPrimaryColor),
+                                     .init(canopySecondaryColor),
+                                     .init(trunkColor))
+        
+        model.geometry = .init(mesh)
+        wireframe.geometry = .init(wireframe: mesh)
     }
-}
-
-extension AppViewModel {
- 
-    func presentExportModal() {
+    
+    private func updateSurface() {
         
-        let panel = NSOpenPanel()
+        var mesh = Mesh([])
         
-        panel.allowsMultipleSelection = false
-        panel.canChooseDirectories = true
-        panel.canChooseFiles = false
-        panel.canCreateDirectories = true
-        panel.isExtensionHidden = true
-        panel.showsHiddenFiles = false
-        panel.showsTagField = false
-        
-        panel.begin { [weak self] response in
+        for tile in Triangle.zero.perimeter {
             
-            switch response {
-                
-            case .OK:
-                
-                guard let self,
-                      let url = panel.urls.first else { return }
-                
-                let operation = AssetCacheExportOperation(foliageCache,
-                                                          url)
-                
-                operation.enqueue(on: self.operationQueue)
-                
-            default: break
-            }
+            let color: NSColor = tile.isPointy ? gridColor : gridAlternateColor
+            
+            mesh = mesh.merge(tile.mesh(.tile,
+                                        .init(color)))
         }
+        
+        surface.geometry = .init(mesh)
     }
 }

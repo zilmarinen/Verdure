@@ -1,11 +1,11 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "Verdure",
-    platforms: [.macOS(.v14),
+    platforms: [.macOS(.v15),
                 .iOS(.v17)],
     products: [
         .library(name: "Verdure",
@@ -15,21 +15,14 @@ let package = Package(
 //        .package(url: "git@github.com:zilmarinen/Deltille.git",
 //                 branch: "main"),
         .package(path: "../Deltille"),
-        .package(path: "../Bivouac"),
         .package(url: "git@github.com:nicklockwood/Euclid.git", 
-                 branch: "develop"),
-        .package(url: "git@github.com:3Squared/PeakOperation.git",
-                 branch: "master"),
-        .package(url: "git@github.com:pointfreeco/swift-dependencies.git",
-                 branch: "main")
+                 branch: "main"),
+        .package(path: "../Lattice"),
     ],
     targets: [
         .target(name: "Verdure",
                 dependencies: ["Deltille",
-                               "Bivouac",
-                               .product(name: "Dependencies",
-                                        package: "swift-dependencies"),
                                "Euclid",
-                               "PeakOperation"]),
+                               "Lattice"]),
     ]
 )
