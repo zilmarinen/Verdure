@@ -14,6 +14,7 @@ let package = Package(
     dependencies: [
 //        .package(url: "git@github.com:zilmarinen/Deltille.git",
 //                 branch: "main"),
+        .package(path: "../Alluvium"),
         .package(path: "../Deltille"),
         .package(url: "git@github.com:nicklockwood/Euclid.git", 
                  branch: "main"),
@@ -21,7 +22,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "Verdure",
-                dependencies: ["Deltille",
+                dependencies: ["Alluvium",
+                               "Deltille",
                                "Euclid",
                                "Lattice"]),
     ]
