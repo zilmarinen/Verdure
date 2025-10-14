@@ -37,7 +37,8 @@ struct AppView: View {
     var sceneView: some View {
         
         SceneView(scene: viewModel.scene,
-                  options: [.allowsCameraControl])
+                  options: [.allowsCameraControl,
+                            .autoenablesDefaultLighting])
         .toolbar {
             
             ToolbarItemGroup {
