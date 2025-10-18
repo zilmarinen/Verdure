@@ -76,8 +76,10 @@ extension AppViewModel {
     private func updateFoliage() {
         
         let mesh = Mesh.foliage(septomino,
+                                canopyStyle,
                                 canopyColorPalette,
-                                trunkColorPalette)
+                                trunkColorPalette).union(.cube(center: .init(0.0, 0.25, 0.0),
+                                                               size: .init(0.25, 0.5, 0.25)).translated(by: .unitX * 2.0))
         
         model.geometry = .init(mesh)
         wireframe.geometry = .init(wireframe: mesh)

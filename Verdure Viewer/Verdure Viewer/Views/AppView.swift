@@ -61,5 +61,15 @@ struct AppView: View {
                     .id(septomino)
             }
         }
+        
+        Picker("Canopy Style",
+               selection: $viewModel.canopyStyle) {
+            
+            ForEach(CanopyStyle.allCases, id: \.self) { style in
+                
+                Text(style.id)
+                    .id(style)
+            }
+        }
     }
 }
